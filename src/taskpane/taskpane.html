@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Word Integration Add-in</title>
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+    <!-- Fabric UI CSS for Office styling -->
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
+    
+    <style>
+        .ms-welcome {
+            padding: 20px;
+            background: #f3f2f1;
+        }
+        
+        .ms-welcome__header {
+            background: #0078d4;
+            color: white;
+            padding: 20px;
+            margin: -20px -20px 20px -20px;
+        }
+        
+        .action-button {
+            margin: 10px 0;
+            width: 100%;
+        }
+        
+        .result-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border: 1px solid #e1dfdd;
+            border-radius: 2px;
+        }
+        
+        .error {
+            color: #d13438;
+        }
+        
+        .success {
+            color: #107c10;
+        }
+    </style>
+</head>
+
+<body class="ms-font-m ms-welcome ms-Fabric">
+    <div class="ms-welcome">
+        <div class="ms-welcome__header">
+            <h1 class="ms-font-xxl">Word Integration Add-in</h1>
+            <p class="ms-font-l">Demonstrates Word document manipulation</p>
+        </div>
+        
+        <div class="ms-welcome__main">
+            <h2 class="ms-font-xl">Document Actions</h2>
+            
+            <button id="insert-text" class="ms-Button ms-Button--primary action-button">
+                <span class="ms-Button-label">Insert Sample Text</span>
+            </button>
+            
+            <button id="get-selection" class="ms-Button ms-Button--primary action-button">
+                <span class="ms-Button-label">Get Selected Text</span>
+            </button>
+            
+            <button id="format-text" class="ms-Button ms-Button--primary action-button">
+                <span class="ms-Button-label">Format Selected Text</span>
+            </button>
+            
+            <button id="insert-table" class="ms-Button ms-Button--primary action-button">
+                <span class="ms-Button-label">Insert Table</span>
+            </button>
+            
+            <button id="get-document-info" class="ms-Button ms-Button--primary action-button">
+                <span class="ms-Button-label">Get Document Info</span>
+            </button>
+            
+            <div id="result" class="result-section" style="display: none;">
+                <h3 class="ms-font-l">Result:</h3>
+                <div id="result-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="taskpane.js"></script>
+</body>
+</html>
