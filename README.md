@@ -21,15 +21,20 @@ npm run setup
 
 ### Development Commands
 ```bash
-# Word Add-in development
-npm run word-dev        # Start development server
-npm run word-start      # Start for sideloading
+# Office Integrations
+npm run word-dev        # Start Word Add-in development server
+npm run word-start      # Start Word Add-in for sideloading
 
-# Get help with all available commands
-npm run help
+# AI Services
+npm run ai-setup        # Setup AI services (install deps + models)
+npm run llm-gateway     # Start LLM Gateway server
+npm run local-llm       # Start local model server (Ollama)
+npm run ai-status       # Check AI services status
 
-# Install dependencies for all integrations
-npm run install-all
+# General
+npm run setup           # Install all dependencies across monolith
+npm run help            # Show all available commands
+npm run install-all     # Install dependencies for all integrations
 ```
 
 ## 📁 Project Structure
@@ -42,16 +47,44 @@ msft-integrations/
 │   ├── powerpoint-addin/ # 🚧 PowerPoint integration (Planned)
 │   ├── teams-app/        # 🚧 Teams application (Planned)
 │   └── outlook-addin/    # 🚧 Outlook add-in (Planned)
+├── ai-services/          # 🆕 AI/LLM components (Independent processes)
+│   ├── llm-gateway/      # LiteLLM proxy server for unified LLM access
+│   ├── local-llm/        # Local model server (Ollama/Llama)
+│   └── shared/           # AI utilities and prompt templates
 ├── shared/               # Shared utilities and common code
-│   └── utils/           # Common functions, logging, config
+│   └── utils/           # Common functions, logging, config, AI client
 ├── scripts/              # Build and development scripts
 │   ├── setup-all.js     # Dependency installation script
+│   ├── setup-ai.py      # 🆕 AI services setup automation
 │   └── dev.js           # Development command router
 └── docs/                # Comprehensive documentation
     ├── ARCHITECTURE.md   # System architecture overview
     ├── DEVELOPMENT.md    # Development guidelines
     └── DEPLOYMENT.md     # Deployment strategies
 ```
+
+## 🎯 Current Features
+
+### Word Office Add-in ✅
+- **Text Operations**: Insert and manipulate text content
+- **Selection Handling**: Get and format selected text
+- **Table Creation**: Insert formatted tables
+- **Document Info**: Retrieve document metadata
+- **Error Handling**: Robust error management with logging
+
+### AI Services ✅
+- **LLM Gateway**: Unified interface for multiple AI providers (local, OpenAI, Azure)
+- **Local Models**: Run Llama, Mistral, and other models locally via Ollama
+- **Provider Switching**: Seamlessly switch between local and cloud AI models
+- **Office Integration**: AI client library for Office applications
+- **Prompt Templates**: Pre-built templates for document analysis, text improvement
+- **REST API**: OpenAI-compatible API for easy integration
+
+### Shared Infrastructure ✅
+- **Common Utilities**: Logger, Config, Office.js helpers, AI client
+- **Development Tools**: Automated setup and development scripts
+- **Documentation**: Comprehensive guides and architecture docs
+- **Monolithic Benefits**: Shared dependencies and consistent patterns
 
 ## Available Integrations
 
@@ -66,6 +99,19 @@ A fully functional Word Office Add-in that demonstrates:
 - Real-time interaction with Word documents
 
 [📖 See Word Add-in README](integrations/word-addin/README.md)
+
+### 🤖 AI Services Integration
+**Location**: `ai-services/`
+
+A comprehensive AI/LLM infrastructure that provides:
+- **LLM Gateway**: Unified proxy for multiple AI providers using liteLLM
+- **Local Model Server**: Run models like Llama2, Mistral locally via Ollama
+- **Provider Flexibility**: Switch between local, OpenAI, and Azure AI seamlessly
+- **Office Integration**: AI client library for adding AI features to Office add-ins
+- **Document Analysis**: Pre-built prompts for text analysis and improvement
+- **REST API**: OpenAI-compatible endpoints for easy integration
+
+[📖 See AI Services README](ai-services/README.md)
 
 ### 🚧 Future Integrations
 
@@ -90,167 +136,141 @@ A fully functional Word Office Add-in that demonstrates:
 
 3. **Follow the specific README** for that integration
 
-## Development Approach
+## 🛠️ Development
 
-This project uses a **monolithic architecture** because:
-- **Easier deployment**: Single repository, single download
-- **Shared resources**: Common utilities, assets, and documentation
-- **Unified versioning**: All integrations versioned together
-- **Simplified maintenance**: One place for issues, updates, and releases
+### Architecture Overview
+This project uses a **monolithic architecture** with modular design:
+- **Single Repository**: All integrations in one place
+- **Shared Resources**: Common utilities, configuration, and dependencies
+- **Independent Modules**: Each integration can be developed and deployed separately
+- **Consistent Patterns**: Unified development experience across all integrations
+- **AI-Enhanced**: Local and cloud AI capabilities integrated throughout
 
-## Global Dependencies
+### Communication Architecture
+- **Office Integrations** ↔ **REST API** ↔ **LLM Gateway** ↔ **AI Providers**
+- **Process Independence**: AI services run separately from Office integrations
+- **Language Agnostic**: JavaScript Office add-ins communicate with Python AI services
+- **Scalable Design**: Easy to move AI services to cloud or scale independently
 
-Some dependencies and certificates are shared across integrations:
-- Office development certificates (stored in `~/.office-addin-dev-certs`)
-- Node.js and npm
-- Common development tools
+### Adding New Integrations
+1. Create new directory under `integrations/`
+2. Follow the established project structure
+3. Use shared utilities from `shared/utils/`
+4. Integrate with AI services via `AIServiceClient`
+5. Add npm scripts to main `package.json`
+6. Update development scripts in `scripts/dev.js`
 
-## Word Add-in Features
+### Best Practices
+- Use shared `Logger` for consistent logging
+- Leverage `Config` utility for environment management
+- Follow `OfficeHelper` patterns for Office.js operations
+- Use `AIServiceClient` for AI integrations
+- Implement proper error handling throughout
 
-- **Insert Text**: Add sample text to the document
-- **Get Selection**: Retrieve currently selected text
-- **Format Text**: Apply bold, color, and size formatting to selected text
-- **Insert Table**: Create a formatted table with sample data
-- **Document Info**: Get statistics about the document (paragraphs, tables, word count)
+## 📚 Documentation
 
-## Prerequisites
+- **[Architecture Guide](docs/ARCHITECTURE.md)** - System design and component overview
+- **[Development Guide](docs/DEVELOPMENT.md)** - Development setup and best practices  
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment strategies
+- **[AI Services README](ai-services/README.md)** - AI infrastructure and setup guide
+- **[Word Add-in README](integrations/word-addin/README.md)** - Word integration details
+- **[Shared Utils README](shared/README.md)** - Common utilities documentation
 
-- Microsoft Word (Desktop, Online, or Mac)
-- Node.js (version 16 or higher)
-- npm or yarn
+## 🔧 Technical Stack
 
-## Setup Instructions
+- **Frontend**: HTML, CSS, JavaScript (ES6+)
+- **Build Tool**: Webpack with development server
+- **Office Integration**: Office.js APIs
+- **AI Services**: Python + FastAPI + liteLLM
+- **Local AI**: Ollama for running Llama, Mistral, etc.
+- **API Gateway**: LiteLLM proxy for unified AI provider access
+- **Microsoft Services**: Microsoft Graph API, Azure AD
+- **Development**: Node.js, npm scripts, hot reload
+- **Architecture**: Monolithic with modular design
 
-1. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+## 🎯 Roadmap
 
-2. **Start the development environment** (requires 2 terminals):
+### Phase 1: Foundation ✅
+- [x] Word Office Add-in with core features
+- [x] Shared utilities and common code
+- [x] Development tooling and scripts
+- [x] Comprehensive documentation
+- [x] AI services infrastructure
+- [x] LLM Gateway with provider switching
+- [x] Local model server integration
 
-   **Terminal 1 - Start Webpack Dev Server:**
-   ```bash
-   npx webpack serve --mode development
-   ```
-   This starts the dev server at `https://localhost:3000/` and must keep running.
+### Phase 2: AI Enhancement 🚧
+- [ ] AI-powered document analysis in Word add-in
+- [ ] Text improvement and writing assistance
+- [ ] Smart content generation
+- [ ] Document summarization features
 
-   **Terminal 2 - Launch Word with Add-in:**
-   ```bash
-   npm start
-   ```
-   This will:
-   - Install SSL certificates for local development
-   - Launch Word with the add-in loaded
-   - The add-in will appear in the **Home** tab under "Word Integration"
+### Phase 3: Expansion 📋
+- [ ] Excel Office Add-in with AI data analysis
+- [ ] PowerPoint Office Add-in with AI presentation generation
+- [ ] Microsoft Teams application
+- [ ] Outlook Add-in with AI email assistance
 
-3. **Fix SSL Certificate Issues** (if needed):
-   - Open your browser and go to `https://localhost:3000/taskpane.html`
-   - Accept the certificate warning ("Advanced" → "Proceed to localhost")
-   - Return to Word - the add-in should now work properly
+### Phase 4: Advanced Features 🔮
+- [ ] Cross-application AI workflows
+- [ ] Advanced analytics and reporting
+- [ ] Custom AI model fine-tuning
+- [ ] Enterprise deployment features
 
-4. **Alternative Manual Setup**:
-   - Open Microsoft Word
-   - Go to **Insert** > **Add-ins** > **Upload My Add-in**
-   - Browse and select the `manifest.xml` file from this project
+## 🚀 Quick Start Guide
 
-## Development
-
-- **Development mode**: `npm run dev` - Runs webpack in watch mode
-- **Build for production**: `npm run build`
-- **Validate manifest**: `npm run validate`
-
-## Project Structure
-
+### For Office Integration Development:
+```bash
+npm run setup          # Install all dependencies
+npm run word-dev       # Start Word add-in development
 ```
-├── src/
-│   ├── taskpane/
-│   │   ├── taskpane.html    # Main UI
-│   │   └── taskpane.js      # Word integration logic
-│   └── commands/
-│       └── commands.html    # Command functions
-├── assets/
-│   └── icon-16.svg         # Add-in icons
-├── manifest.xml            # Add-in configuration
-├── webpack.config.js       # Build configuration
-└── package.json           # Dependencies and scripts
+
+### For AI Services Development:
+```bash
+npm run ai-setup       # Setup AI services + download models
+npm run llm-gateway    # Start LLM gateway
+npm run ai-status      # Check services status
 ```
 
-## How It Works
+### For Full Stack Development:
+```bash
+npm run setup          # Install all dependencies
+npm run ai-setup       # Setup AI services
+npm run llm-gateway    # Terminal 1: Start AI gateway
+npm run word-dev       # Terminal 2: Start Word development
+```
 
-This add-in uses the **Office.js JavaScript API** to interact with Word:
+## 🤝 Contributing
 
-1. **Office.onReady()**: Initializes when Office is ready
-2. **Word.run()**: Creates a context for Word API operations
-3. **context.sync()**: Executes queued operations
-4. **Word APIs**: Access document elements (body, paragraphs, tables, etc.)
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/new-integration`
+3. Follow the established patterns and use shared utilities
+4. Test your integration thoroughly
+5. Update documentation as needed
+6. Submit a pull request
 
-## Key Word API Features Used
+## 📄 License
 
-- `context.document.body` - Access document content
-- `context.document.getSelection()` - Get selected text
-- `body.insertText()` - Insert text at specific locations
-- `body.insertTable()` - Create tables
-- Font formatting (bold, color, size)
-- Table styling and formatting
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Troubleshooting
+## 🆘 Support
 
-1. **SSL Certificate Issues**: 
-   - First, open `https://localhost:3000/taskpane.html` in your browser and accept the certificate
-   - Then the add-in should work in Word without SSL errors
+- Check the [Development Guide](docs/DEVELOPMENT.md) for common issues
+- Review the [Architecture Guide](docs/ARCHITECTURE.md) for system understanding
+- Consult the [AI Services README](ai-services/README.md) for AI-related questions
+- Open an issue for bugs or feature requests
+- Consult Microsoft's Office Add-ins documentation for platform-specific questions
 
-2. **Certificate Issues After Windows Update**:
-   If certificates become outdated after a Windows update:
-   ```bash
-   # Stop all Node.js processes first
-   taskkill /f /im node.exe
-   
-   # Delete old certificates (replace {username} with your username)
-   Remove-Item -Recurse -Force "C:\Users\{username}\.office-addin-dev-certs\*"
-   
-   # Or for current user:
-   Remove-Item -Recurse -Force "$env:USERPROFILE\.office-addin-dev-certs\*"
-   
-   # Regenerate fresh certificates
-   npx office-addin-dev-certs install
-   ```
+---
 
-3. **Stop All Development Processes**:
-   ```bash
-   # Kill all Node.js processes
-   taskkill /f /im node.exe
-   
-   # Kill Word processes if needed
-   taskkill /f /im WINWORD.EXE
-   
-   # Check what's running on port 3000
-   netstat -ano | findstr :3000
-   
-   # Check for remaining Node processes
-   Get-Process | Where-Object {$_.ProcessName -like "*node*"}
-   ```
+## 🎉 What Makes This Project Special
 
-4. **"Access Denied" loopback exemption error**: 
-   - This warning is normal and doesn't prevent the add-in from working
-   - To fix it completely, run PowerShell as Administrator and rerun `npm start`
+This Microsoft Integrations Monolith combines the **best of both worlds**:
 
-5. **Add-in not loading**: 
-   - Ensure both terminals are running (webpack dev server + Office debugging)
-   - Verify the dev server is running on https://localhost:3000
-   - Check that Word shows the "Word Integration" group in the Home tab
+- **🏢 Enterprise-Ready Office Integrations** - Professional Office add-ins with robust error handling
+- **🤖 Cutting-Edge AI Capabilities** - Local and cloud AI models seamlessly integrated
+- **🔧 Developer-Friendly Architecture** - Monolithic benefits with modular flexibility
+- **📚 Comprehensive Documentation** - Everything you need to extend and deploy
+- **🚀 Production-Ready** - From development to deployment, fully covered
 
-6. **Manifest errors**: Run `npm run validate` to check the manifest
-
-7. **Word compatibility**: Requires Word 2016 or later, or Word Online
-
-8. **Development Server Stops**: 
-   - Keep Terminal 1 (webpack serve) running continuously
-   - Only Terminal 2 (npm start) will exit after launching Word
-
-## Next Steps
-
-- Add more advanced Word features (content controls, styles, etc.)
-- Integrate with external APIs
-- Add authentication for cloud services
-- Implement document templates
-- Add custom ribbon commands
+Whether you're building simple Office automations or complex AI-powered document workflows, this project provides the foundation to build, scale, and deploy with confidence!
