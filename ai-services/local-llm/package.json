@@ -1,0 +1,22 @@
+{
+  "name": "local-llm",
+  "version": "1.0.0",
+  "description": "Local LLM server for running models like Llama, Mistral, etc.",
+  "main": "server.py",
+  "scripts": {
+    "start": "python server.py",
+    "dev": "python server.py --debug",
+    "install": "pip install -r requirements.txt",
+    "setup-ollama": "python setup_ollama.py",
+    "test": "python -m pytest tests/"
+  },
+  "keywords": [
+    "llm",
+    "local",
+    "llama",
+    "mistral",
+    "ollama"
+  ],
+  "author": "",
+  "license": "MIT"
+}

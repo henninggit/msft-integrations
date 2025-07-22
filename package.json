@@ -1,0 +1,35 @@
+{
+  "name": "msft-integrations",
+  "version": "1.0.0",
+  "description": "A monolithic suite of Microsoft application integrations and tools",
+  "main": "index.js",
+  "scripts": {
+    "setup": "node scripts/setup-all.js",
+    "dev": "node scripts/dev.js",
+    "word-dev": "node scripts/dev.js word-dev",
+    "word-start": "node scripts/dev.js word-start",
+    "word-build": "cd integrations/word-addin && npm run build",
+    "llm-gateway": "node scripts/dev.js llm-gateway",
+    "local-llm": "node scripts/dev.js local-llm",
+    "ai-setup": "node scripts/dev.js ai-setup",
+    "ai-status": "node scripts/dev.js ai-status",
+    "install-all": "node scripts/setup-all.js",
+    "help": "node scripts/dev.js help",
+    "test": "echo \"Run tests for specific integrations in their directories\""
+  },
+  "keywords": [
+    "microsoft",
+    "office",
+    "integrations",
+    "word",
+    "excel", 
+    "powerpoint",
+    "teams",
+    "outlook"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

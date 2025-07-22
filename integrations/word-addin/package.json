@@ -1,0 +1,40 @@
+{
+  "name": "word-integration-addin",
+  "version": "1.0.0",
+  "description": "Microsoft Word Office Add-in for document manipulation",
+  "main": "src/taskpane/taskpane.html",
+  "scripts": {
+    "start": "office-addin-dev-certs install && office-addin-debugging start manifest.xml",
+    "stop": "office-addin-debugging stop manifest.xml",
+    "validate": "office-addin-manifest validate manifest.xml",
+    "build": "webpack --mode production",
+    "dev": "webpack serve --mode development",
+    "test": "echo \"No tests yet\""
+  },
+  "keywords": [
+    "office-addin",
+    "microsoft",
+    "word",
+    "office-js"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/office-js": "^1.0.374",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^7.1.2",
+    "html-loader": "^5.1.0",
+    "html-webpack-plugin": "^5.5.0",
+    "office-addin-cli": "^1.6.0",
+    "office-addin-debugging": "^5.0.0",
+    "office-addin-dev-certs": "^1.13.0",
+    "office-addin-manifest": "^1.13.0",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

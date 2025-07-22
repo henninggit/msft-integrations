@@ -1,0 +1,21 @@
+{
+  "name": "llm-gateway",
+  "version": "1.0.0",
+  "description": "LiteLLM proxy for unified LLM provider access",
+  "main": "server.py",
+  "scripts": {
+    "start": "python server.py",
+    "dev": "python server.py --debug",
+    "install": "pip install -r requirements.txt",
+    "test": "python -m pytest tests/"
+  },
+  "keywords": [
+    "llm",
+    "litellm",
+    "proxy",
+    "ai",
+    "gateway"
+  ],
+  "author": "",
+  "license": "MIT"
+}
