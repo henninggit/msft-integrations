@@ -1,0 +1,316 @@
+# Microsoft Integrations Project - .gitignore
+
+# ========================================
+# Node.js / JavaScript
+# ========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# ESLint cache
+.eslintcache
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# ========================================
+# Python / AI Services
+# ========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# ========================================
+# Office Add-ins / Build Artifacts
+# ========================================
+dist/
+build/
+*.tsbuildinfo
+
+# Webpack
+.webpack/
+webpack-stats.json
+
+# Office Add-in certificates
+certs/
+*.crt
+*.key
+*.pem
+
+# Office manifest temp files
+manifest_temp.xml
+
+# ========================================
+# AI Services / LLM Related
+# ========================================
+# Model files (usually large)
+*.bin
+*.safetensors
+*.gguf
+*.ggml
+models/
+ollama_models/
+
+# AI service logs
+logs/
+*.log
+
+# LLM cache
+.cache/
+.huggingface/
+.ollama/
+
+# Training artifacts
+checkpoints/
+wandb/
+tensorboard_logs/
+
+# ========================================
+# Environment & Configuration
+# ========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Configuration files with secrets
+config.json
+secrets.json
+.secrets
+
+# ========================================
+# IDEs & Editors
+# ========================================
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+.ionide/
+
+# JetBrains IDEs
+.idea/
+*.swp
+*.swo
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*~
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# ========================================
+# Operating System
+# ========================================
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ========================================
+# Temporary & Cache Files
+# ========================================
+*.tmp
+*.temp
+*.cache
+.tmp/
+.temp/
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Compressed files (if not part of distribution)
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# ========================================
+# Project Specific
+# ========================================
+# Office Add-in development server files
+.office-addin-dev-certs/
+
+# AI model downloads (comment out if you want to track specific models)
+# *.model
+# *.weights
+
+# Local development overrides
+local-config.json
+dev-settings.json
+
+# Test output
+test-results/
+test-reports/
+
+# Documentation builds
+docs/_build/
+site/
+
+# Database files (if any)
+*.db
+*.sqlite
+*.sqlite3
+
+# ========================================
+# Keep These Files (Exceptions)
+# ========================================
+# Keep example environment files
+!.env.example
+!.env.template
+
+# Keep documentation
+!docs/
+!README.md
+!CHANGELOG.md
+
+# Keep configuration templates
+!config.example.json
+!settings.template.json
