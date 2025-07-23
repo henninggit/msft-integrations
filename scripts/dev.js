@@ -29,28 +29,32 @@ const commands = {
         description: 'Start LLM Gateway server',
         action: () => {
             const gatewayPath = path.join(projectRoot, 'ai-services', 'llm-gateway');
-            execSync('python server.py', { cwd: gatewayPath, stdio: 'inherit' });
+            const venvPython = path.join(projectRoot, 'ai-services', 'venv', 'Scripts', 'python.exe');
+            execSync(`"${venvPython}" server.py`, { cwd: gatewayPath, stdio: 'inherit' });
         }
     },
     'local-llm': {
         description: 'Start Local LLM server',
         action: () => {
             const llmPath = path.join(projectRoot, 'ai-services', 'local-llm');
-            execSync('python server.py start', { cwd: llmPath, stdio: 'inherit' });
+            const venvPython = path.join(projectRoot, 'ai-services', 'venv', 'Scripts', 'python.exe');
+            execSync(`"${venvPython}" server.py start`, { cwd: llmPath, stdio: 'inherit' });
         }
     },
     'ai-setup': {
         description: 'Setup AI services (install dependencies and models)',
         action: () => {
             const setupScript = path.join(projectRoot, 'scripts', 'setup-ai.py');
-            execSync(`python "${setupScript}"`, { stdio: 'inherit' });
+            const venvPython = path.join(projectRoot, 'ai-services', 'venv', 'Scripts', 'python.exe');
+            execSync(`"${venvPython}" "${setupScript}"`, { stdio: 'inherit' });
         }
     },
     'ai-status': {
         description: 'Check AI services status',
         action: () => {
             const llmPath = path.join(projectRoot, 'ai-services', 'local-llm');
-            execSync('python server.py status', { cwd: llmPath, stdio: 'inherit' });
+            const venvPython = path.join(projectRoot, 'ai-services', 'venv', 'Scripts', 'python.exe');
+            execSync(`"${venvPython}" server.py status`, { cwd: llmPath, stdio: 'inherit' });
         }
     },
     'setup': {
@@ -60,11 +64,60 @@ const commands = {
             execSync(`node "${setupScript}"`, { stdio: 'inherit' });
         }
     },
+    'stop': {
+        description: 'Stop all running project services',
+        action: stopAllServices
+    },
     'help': {
         description: 'Show this help message',
         action: showHelp
     }
 };
+
+function stopAllServices() {
+    console.log('🛑 Stopping all Microsoft Integrations services...\n');
+    
+    try {
+        // Kill processes by port (common development ports)
+        const ports = [3000, 8000, 11434]; // webpack dev server, LLM gateway, Ollama
+        
+        ports.forEach(port => {
+            try {
+                console.log(`🔍 Checking port ${port}...`);
+                // Use PowerShell to find and kill processes on specific ports
+                execSync(`powershell -Command "Get-NetTCPConnection -LocalPort ${port} -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id (Get-Process -Id $_.OwningProcess).Id -Force }"`, { stdio: 'inherit' });
+                console.log(`✅ Stopped services on port ${port}`);
+            } catch (error) {
+                console.log(`ℹ️  No services running on port ${port}`);
+            }
+        });
+        
+        // Kill processes by name (common Node.js and Python processes)
+        const processNames = ['node.exe', 'python.exe', 'uvicorn.exe'];
+        
+        processNames.forEach(processName => {
+            try {
+                console.log(`🔍 Stopping ${processName} processes...`);
+                execSync(`taskkill /F /IM "${processName}" /T 2>nul`, { stdio: 'pipe' });
+                console.log(`✅ Stopped ${processName} processes`);
+            } catch (error) {
+                console.log(`ℹ️  No ${processName} processes found`);
+            }
+        });
+        
+        console.log('\n🎉 All services stopped successfully!');
+        console.log('💡 You can restart services with:');
+        console.log('   npm run llm-gateway    - Start LLM Gateway');
+        console.log('   npm run word-dev       - Start Word development');
+        console.log('   npm run local-llm      - Start Local LLM (requires Ollama)');
+        
+    } catch (error) {
+        console.error('❌ Error stopping services:', error.message);
+        console.log('\n💡 Manual cleanup:');
+        console.log('   - Press Ctrl+C in any running terminal windows');
+        console.log('   - Check Task Manager for remaining processes');
+    }
+}
 
 function showHelp() {
     console.log('Microsoft Integrations Monolith - Development Commands\n');

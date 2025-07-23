@@ -13,6 +13,7 @@
     "local-llm": "node scripts/dev.js local-llm",
     "ai-setup": "node scripts/dev.js ai-setup",
     "ai-status": "node scripts/dev.js ai-status",
+    "stop": "node scripts/dev.js stop",
     "install-all": "node scripts/setup-all.js",
     "help": "node scripts/dev.js help",
     "test": "echo \"Run tests for specific integrations in their directories\""
