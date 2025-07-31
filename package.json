@@ -6,7 +6,7 @@
   "scripts": {
     "setup": "node scripts/setup-all.js",
     "dev": "node scripts/dev.js",
-    "word-dev": "node scripts/dev.js word-dev",
+    "word-webpack": "node scripts/dev.js word-webpack",
     "word-start": "node scripts/dev.js word-start",
     "word-build": "cd integrations/word-addin && npm run build",
     "llm-gateway": "node scripts/dev.js llm-gateway",

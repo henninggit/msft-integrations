@@ -11,8 +11,8 @@ const path = require('path');
 const projectRoot = path.dirname(__dirname);
 
 const commands = {
-    'word-dev': {
-        description: 'Start Word Add-in development server',
+    'word-webpack': {
+        description: 'Start Word webpack',
         action: () => {
             const wordPath = path.join(projectRoot, 'integrations', 'word-addin');
             execSync('npm run dev', { cwd: wordPath, stdio: 'inherit' });
@@ -108,7 +108,7 @@ function stopAllServices() {
         console.log('\n🎉 All services stopped successfully!');
         console.log('💡 You can restart services with:');
         console.log('   npm run llm-gateway    - Start LLM Gateway');
-        console.log('   npm run word-dev       - Start Word development');
+        console.log('   npm run word-webpack   - Start Word development');
         console.log('   npm run local-llm      - Start Local LLM (requires Ollama)');
         
     } catch (error) {
@@ -144,7 +144,7 @@ function showHelp() {
     console.log('  1. npm run setup          - Install all dependencies');
     console.log('  2. npm run ai-setup       - Setup AI services');
     console.log('  3. npm run llm-gateway    - Start LLM gateway');
-    console.log('  4. npm run word-dev       - Start Word add-in development');
+    console.log('  4. npm run word-webpack   - Start Word add-in development');
 }
 
 // Parse command line arguments

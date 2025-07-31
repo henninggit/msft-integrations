@@ -22,7 +22,7 @@ npm run setup
 ### Development Commands
 ```bash
 # Office Integrations
-npm run word-dev        # Start Word Add-in development server
+npm run word-webpack    # Start Word Add-in development server
 npm run word-start      # Start Word Add-in for sideloading
 
 # AI Services
@@ -222,7 +222,7 @@ This project uses a **monolithic architecture** with modular design:
 ### For Office Integration Development:
 ```bash
 npm run setup          # Install all dependencies
-npm run word-dev       # Start Word add-in development
+npm run word-webpack   # Start Word add-in development
 ```
 
 ### For AI Services Development:
@@ -237,7 +237,7 @@ npm run ai-status      # Check services status
 npm run setup          # Install all dependencies
 npm run ai-setup       # Setup AI services
 npm run llm-gateway    # Terminal 1: Start AI gateway
-npm run word-dev       # Terminal 2: Start Word development
+npm run word-webpack   # Terminal 2: Start Word development
 ```
 
 ## 🤝 Contributing
