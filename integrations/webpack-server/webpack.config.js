@@ -50,12 +50,6 @@ module.exports = (env, options) => {
       }),
       
       new HtmlWebpackPlugin({
-        template: './src/copilot-panel/copilot-panel.html',
-        filename: 'copilot-panel.html',
-        chunks: []
-      }),
-      
-      new HtmlWebpackPlugin({
         template: './src/commands/commands.html',
         filename: 'commands.html',
         chunks: []

@@ -13,16 +13,137 @@
     <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
     
     <style>
-        .ms-welcome {
-            padding: 20px;
-            background: #f3f2f1;
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            overflow: hidden;
         }
         
-        .ms-welcome__header {
+        .copilot-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: #ffffff;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .copilot-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e1e1e1;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .copilot-icon {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(45deg, #0078d4, #106ebe);
+            border-radius: 50%;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .copilot-title {
+            font-weight: 600;
+            color: #323130;
+            font-size: 14px;
+        }
+        
+        .close-button {
+            margin-left: auto;
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #605e5c;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 3px;
+        }
+        
+        .close-button:hover {
+            background: #e1dfdd;
+        }
+        
+        .copilot-content {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+        
+        .prompt-input {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px;
+            border: 1px solid #d1d1d1;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            outline: none;
+        }
+        
+        .prompt-input:focus {
+            border-color: #0078d4;
+            box-shadow: 0 0 0 1px #0078d4;
+        }
+        
+        .character-count {
+            text-align: right;
+            font-size: 12px;
+            color: #605e5c;
+            margin-top: 4px;
+        }
+        
+        .generate-button {
             background: #0078d4;
             color: white;
-            padding: 20px;
-            margin: -20px -20px 20px -20px;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+            width: 100px;
+        }
+        
+        .generate-button:hover {
+            background: #106ebe;
+        }
+        
+        .generate-button:disabled {
+            background: #a19f9d;
+            cursor: not-allowed;
+        }
+        
+        .suggestions {
+            margin-top: 20px;
+        }
+        
+        .suggestion-item {
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border: 1px solid #e1e1e1;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #323130;
+        }
+        
+        .suggestion-item:hover {
+            background: #e1dfdd;
         }
         
         .action-button {
@@ -48,35 +169,46 @@
     </style>
 </head>
 
-<body class="ms-font-m ms-welcome ms-Fabric">
-    <div class="ms-welcome">
-        <div class="ms-welcome__header">
-            <h1 class="ms-font-xxl">Word Integration Add-in</h1>
-            <p class="ms-font-l">Demonstrates Word document manipulation</p>
+<body class="ms-font-m ms-Fabric">
+    <div class="copilot-container">
+        <div class="copilot-header">
+            <div class="copilot-icon">✨</div>
+            <div class="copilot-title">Draft with AI</div>
+            <button class="close-button" onclick="closeCopilot()">×</button>
         </div>
         
-        <div class="ms-welcome__main">
-            <h2 class="ms-font-xl">Document Actions</h2>
+        <div class="copilot-content">
+            <textarea 
+                id="promptInput" 
+                class="prompt-input" 
+                placeholder="Write an engaging introduction for a blog post about the benefits of remote work. Make it educational and informative"
+                oninput="updateCharacterCount()"
+            ></textarea>
+            <div class="character-count">
+                <span id="charCount">0</span>/2000
+            </div>
             
-            <button id="insert-text" class="ms-Button ms-Button--primary action-button">
-                <span class="ms-Button-label">Insert Sample Text</span>
-            </button>
+            <button class="generate-button" onclick="generateContent()">Generate</button>
             
-            <button id="get-selection" class="ms-Button ms-Button--primary action-button">
-                <span class="ms-Button-label">Get Selected Text</span>
-            </button>
+            <div class="suggestions">
+                <div class="suggestion-item" onclick="applySuggestion('blog-intro')">
+                    Write a compelling blog introduction
+                </div>
+                <div class="suggestion-item" onclick="applySuggestion('summary')">
+                    Summarize the selected text
+                </div>
+                <div class="suggestion-item" onclick="applySuggestion('improve')">
+                    Improve writing style and clarity
+                </div>
+            </div>
             
-            <button id="format-text" class="ms-Button ms-Button--primary action-button">
-                <span class="ms-Button-label">Format Selected Text</span>
-            </button>
-            
-            <button id="insert-table" class="ms-Button ms-Button--primary action-button">
-                <span class="ms-Button-label">Insert Table</span>
-            </button>
-            
-            <button id="get-document-info" class="ms-Button ms-Button--primary action-button">
-                <span class="ms-Button-label">Get Document Info</span>
-            </button>
+            <!-- Original action buttons for testing -->
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e1e1e1;">
+                <h3>Word Integration Actions</h3>
+                <button class="action-button" onclick="insertText()">Insert Sample Text</button>
+                <button class="action-button" onclick="formatText()">Format Selected Text</button>
+                <button class="action-button" onclick="getDocumentContent()">Get Document Content</button>
+            </div>
             
             <div id="result" class="result-section" style="display: none;">
                 <h3 class="ms-font-l">Result:</h3>

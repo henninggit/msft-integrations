@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Copilot Assistant</title>
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .copilot-panel {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: #ffffff;
+            position: relative;
+        }
+        
+        .copilot-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e5e5e5;
+            min-height: 40px;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .copilot-icon {
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #0078d4 0%, #1ba1e2 100%);
+            border-radius: 50%;
+            margin-right: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .copilot-title {
+            font-weight: 600;
+            color: #242424;
+            font-size: 13px;
+        }
+        
+        .minimize-btn {
+            background: none;
+            border: none;
+            font-size: 14px;
+            color: #605e5c;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 2px;
+            line-height: 1;
+        }
+        
+        .minimize-btn:hover {
+            background: #e1dfdd;
+        }
+        
+        .copilot-content {
+            flex: 1;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .prompt-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .prompt-input {
+            width: 100%;
+            min-height: 90px;
+            max-height: 200px;
+            padding: 10px;
+            border: 1px solid #d1d1d1;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 13px;
+            line-height: 1.4;
+            resize: vertical;
+            outline: none;
+            background: #fafafa;
+        }
+        
+        .prompt-input:focus {
+            border-color: #0078d4;
+            background: #ffffff;
+            box-shadow: 0 0 0 1px #0078d4;
+        }
+        
+        .prompt-input::placeholder {
+            color: #a0a0a0;
+        }
+        
+        .char-counter {
+            text-align: right;
+            font-size: 11px;
+            color: #8a8a8a;
+            margin: 4px 0 12px 0;
+        }
+        
+        .action-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .generate-btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 0 0 auto;
+            transition: background-color 0.2s;
+        }
+        
+        .generate-btn:hover:not(:disabled) {
+            background: #106ebe;
+        }
+        
+        .generate-btn:disabled {
+            background: #c8c8c8;
+            cursor: not-allowed;
+        }
+        
+        .reference-btn {
+            background: transparent;
+            color: #0078d4;
+            border: 1px solid #d1d1d1;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.2s;
+        }
+        
+        .reference-btn:hover {
+            background: #f3f9ff;
+            border-color: #0078d4;
+        }
+        
+        .suggestions {
+            margin-top: 8px;
+        }
+        
+        .suggestion-title {
+            font-size: 12px;
+            color: #605e5c;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        
+        .suggestion-item {
+            padding: 6px 8px;
+            background: #f8f9fa;
+            border: 1px solid #e5e5e5;
+            border-radius: 3px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #323130;
+            transition: all 0.2s;
+        }
+        
+        .suggestion-item:hover {
+            background: #e1dfdd;
+            border-color: #d1d1d1;
+        }
+        
+        .status-area {
+            margin-top: auto;
+            padding: 8px;
+            background: #f8f9fa;
+            border-top: 1px solid #e5e5e5;
+            border-radius: 0 0 4px 4px;
+            font-size: 11px;
+            color: #605e5c;
+            min-height: 32px;
+            display: none;
+        }
+        
+        .status-area.show {
+            display: block;
+        }
+        
+        .loading-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #0078d4;
+        }
+        
+        .spinner {
+            width: 12px;
+            height: 12px;
+            border: 2px solid #e5e5e5;
+            border-top: 2px solid #0078d4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success-msg {
+            color: #107c10;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .error-msg {
+            color: #d13438;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="copilot-panel">
+        <div class="copilot-header">
+            <div class="header-left">
+                <div class="copilot-icon">✨</div>
+                <div class="copilot-title">Draft with Copilot</div>
+            </div>
+            <button class="minimize-btn" onclick="minimizePanel()" title="Minimize">−</button>
+        </div>
+        
+        <div class="copilot-content">
+            <div class="prompt-container">
+                <textarea 
+                    id="promptInput" 
+                    class="prompt-input" 
+                    placeholder="Write a go-to-market document for the grand opening of Contoso home improvement store based on Contoso Home Improvement Store.docx"
+                    oninput="updateCharacterCount()"
+                ></textarea>
+                
+                <div class="char-counter">
+                    <span id="charCount">0</span>/2000
+                </div>
+                
+                <div class="action-row">
+                    <button class="generate-btn" onclick="generateContent()" id="generateBtn">
+                        Generate
+                    </button>
+                    <button class="reference-btn" onclick="referenceFile()">
+                        📎 Reference a file
+                    </button>
+                </div>
+                
+                <div class="suggestions">
+                    <div class="suggestion-title">Quick suggestions:</div>
+                    <div class="suggestion-item" onclick="applySuggestion('marketing')">
+                        Create a marketing strategy document
+                    </div>
+                    <div class="suggestion-item" onclick="applySuggestion('proposal')">
+                        Write a business proposal
+                    </div>
+                    <div class="suggestion-item" onclick="applySuggestion('summary')">
+                        Summarize selected content
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="statusArea" class="status-area">
+            <div id="statusContent"></div>
+        </div>
+    </div>
+
+    <script>
+        Office.onReady(() => {
+            updateCharacterCount();
+        });
+
+        function updateCharacterCount() {
+            const input = document.getElementById('promptInput');
+            const charCount = document.getElementById('charCount');
+            if (input && charCount) {
+                charCount.textContent = input.value.length;
+            }
+        }
+
+        function minimizePanel() {
+            // In a real implementation, this might minimize the task pane
+            showStatus('Panel minimized (simulated)', 'success');
+        }
+
+        function applySuggestion(type) {
+            const suggestions = {
+                'marketing': 'Create a comprehensive marketing strategy for the grand opening of our new home improvement store, including target audience analysis, promotional campaigns, and success metrics.',
+                'proposal': 'Write a detailed business proposal for expanding our home improvement services, including market analysis, financial projections, and implementation timeline.',
+                'summary': 'Provide a concise summary of the key points and main takeaways from the selected content.'
+            };
+            
+            document.getElementById('promptInput').value = suggestions[type] || '';
+            updateCharacterCount();
+        }
+
+        async function generateContent() {
+            const prompt = document.getElementById('promptInput').value.trim();
+            if (!prompt) {
+                showStatus('Please enter a prompt first', 'error');
+                return;
+            }
+
+            const generateBtn = document.getElementById('generateBtn');
+            
+            // Show loading state
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<div class="spinner" style="width: 14px; height: 14px; border-width: 2px;"></div>';
+            showStatus('<div class="loading-indicator"><div class="spinner"></div>Generating content...</div>');
+
+            try {
+                // Simulate API call - replace with your AI backend
+                await new Promise(resolve => setTimeout(resolve, 2500));
+                
+                const generatedContent = `# ${prompt.includes('marketing') ? 'Marketing Strategy' : 'Go-to-Market Plan'}: Contoso Home Improvement Store
+
+## Executive Summary
+${prompt.includes('marketing') ? 'Our comprehensive marketing strategy' : 'This go-to-market plan'} outlines the strategic approach for the grand opening of Contoso Home Improvement Store, focusing on community engagement, competitive positioning, and sustainable growth.
+
+## Key Objectives
+- Drive 500+ visitors on opening day
+- Establish brand recognition in local market
+- Generate $50,000+ in opening week sales
+- Build customer database of 1,000+ contacts
+
+## Target Market Analysis
+**Primary Audience:** Homeowners aged 25-55
+- Income bracket: $40,000-$100,000
+- Geographic radius: 15 miles
+- Psychographics: DIY enthusiasts, quality-conscious
+
+**Secondary Audience:** Professional contractors
+- Small to medium construction companies
+- Repeat purchase potential
+- Bulk order opportunities
+
+## Marketing Channels
+1. **Digital Marketing**
+   - Social media campaigns (Facebook, Instagram)
+   - Google Ads targeting local keywords
+   - Email marketing to pre-registered customers
+
+2. **Traditional Marketing**
+   - Local newspaper advertisements
+   - Radio sponsorships
+   - Direct mail campaigns
+
+3. **Community Engagement**
+   - Partnership with local contractors
+   - Home improvement workshops
+   - Sponsorship of community events
+
+## Grand Opening Event Strategy
+- **Date:** First Saturday of next month
+- **Duration:** 3-day celebration
+- **Special Features:**
+  - 20% off all merchandise
+  - Free tool demonstrations
+  - Kids' workshop area
+  - Local celebrity appearance
+
+## Success Metrics
+- Foot traffic count
+- Sales conversion rate
+- Social media engagement
+- Customer acquisition cost
+- Return customer percentage
+
+## Timeline
+**Week 1-2:** Launch digital campaigns
+**Week 3:** Begin traditional advertising
+**Week 4:** Community partnerships
+**Opening Week:** Execute grand opening event
+
+## Budget Allocation
+- Digital Marketing: 40%
+- Traditional Advertising: 30%
+- Event Costs: 20%
+- Community Partnerships: 10%
+
+This comprehensive approach ensures maximum visibility and strong market entry for Contoso Home Improvement Store.`;
+
+                // Insert generated content into Word document
+                await Word.run(async (context) => {
+                    const selection = context.document.getSelection();
+                    selection.insertText(generatedContent, Word.InsertLocation.replace);
+                    await context.sync();
+                });
+
+                showStatus('✅ Content generated and inserted successfully!', 'success');
+                
+                // Clear the input
+                document.getElementById('promptInput').value = '';
+                updateCharacterCount();
+
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.textContent = 'Generate';
+            }
+        }
+
+        function referenceFile() {
+            showStatus('File reference feature coming soon...', 'info');
+        }
+
+        function showStatus(message, type = 'info') {
+            const statusArea = document.getElementById('statusArea');
+            const statusContent = document.getElementById('statusContent');
+            
+            statusContent.innerHTML = message;
+            statusArea.className = `status-area show ${type}`;
+            
+            // Auto-hide after 4 seconds for success/info messages
+            if (type === 'success' || type === 'info') {
+                setTimeout(() => {
+                    statusArea.className = 'status-area';
+                }, 4000);
+            }
+        }
+    </script>
+</body>
+</html>
